@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import List
 
 import pandas as pd
-
 from deep_translator import GoogleTranslator
 
 BODY_COL_NAME = 'body'
@@ -28,36 +27,43 @@ def translate_data_to_ru(
     df[LABEL_COL_NAME] = df[LABEL_COL_NAME].astype(bool)
 
     df = df.loc[df[BODY_COL_NAME].str.len() < MAX_BODY_LEN]
+    chunk_i = 0
 
     def process_chunk(chunk):
-        print('process_chunk')
+        nonlocal chunk_i
+        chunk_i += 1
+        i = chunk_i
+        print(f'process_chunk {i}')
         try:
             chunk[BODY_COL_NAME] = translate_text_batch_to_ru(chunk[BODY_COL_NAME].tolist())
         except Exception as e:
-            print(f"TRANSLATION ERROR: {e}")
+            print(f"chunk {i} TRANSLATION ERROR: {e}")
 
-    chunk_size = 100_000
+        else:
+            chunk.to_csv(target_path + f'_{i}', index=False)
+
+    chunk_size = 10_000
     chunks = [df[i:i + chunk_size] for i in range(0, df.shape[0], chunk_size)]
 
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=6) as executor:
         executor.map(process_chunk, chunks)
 
-    df = pd.concat(chunks)
+    df = pd.concat(chunks, ignore_index=True)
     print(df)
     df.to_csv(target_path, index=False)
 
 
 if __name__ == '__main__':
-    translate_data_to_ru(
-        'data/original/fraud.csv',
-        'data/ru/fraud.csv',
-        body_column_name='Body',
-        label_column_name='Label'
-    )
-    translate_data_to_ru(
-        'data/original/phishing.csv',
-        'data/ru/phishing.csv'
-    )
+    # translate_data_to_ru(
+    #    'data/original/fraud.csv',
+    #    'data/ru/fraud.csv',
+    #    body_column_name='Body',
+    #    label_column_name='Label'
+    # )
+    # translate_data_to_ru(
+    #    'data/original/fishing.csv',
+    #    'data/ru/fishing.csv'
+    # )
     translate_data_to_ru(
         'data/original/spam.csv',
         'data/ru/spam.csv',
