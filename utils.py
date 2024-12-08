@@ -1,3 +1,4 @@
+import pickle
 import random
 
 import numpy as np
@@ -22,22 +23,33 @@ def create_tokenizer(X: pd.DataFrame) -> Tokenizer:
     return tokenizer
 
 
+def save_tokenizer(tokenizer: Tokenizer, path: str):
+    with open(path + '.pickle', 'wb') as f:
+        pickle.dump(tokenizer, f)
+
+
+def load_tokenizer(path: str) -> Tokenizer:
+    with open(path + '.pickle', 'rb') as f:
+        return pickle.load(f)
+
+
 def create_pad_sequences(tokenizer: Tokenizer, X: pd.DataFrame) -> pd.DataFrame:
     X = tokenizer.texts_to_sequences(X)
     X = pad_sequences(X, maxlen=max_length)
     return X
 
 
-def load_model(name: str):
+def load_model(path: str) -> Model:
     from keras.src.saving import load_model
 
-    loaded_model = load_model(f'{name}.h5')
+    model = load_model(f'{path}.h5')
     print("Модель загружена!")
-    loaded_model.summary()  # Вывод информации о загруженной модели.
+    model.summary()  # Вывод информации о загруженной модели.
+    return model
 
 
-def save_model(model: Model, name: str):
-    model.save(f'{name}.h5')
+def save_model(model: Model, path: str):
+    model.save(f'{path}.h5')
     print("Модель сохранена!")
 
 
@@ -49,11 +61,3 @@ def clean_text(text):
 
     text = text.replace('  ', ' ')
     return text.strip()
-
-
-def tokenize_message(message: str) -> str:
-    message = clean_text(message)
-    message = tokenizer.texts_to_sequences(X_train)
-    message = pad_sequences(X_train_seq, maxlen=max_length)
-
-    return message
