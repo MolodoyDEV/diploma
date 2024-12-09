@@ -20,3 +20,11 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
     users = db.relationship('User', secondary=users_and_roles)
+
+
+class Settings(db.Model):
+    __tablename__ = 'settings'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(32), unique=True, nullable=False)
+    description = db.Column(db.String(256), nullable=True)
+    value = db.Column(db.String(256), nullable=False)
