@@ -34,7 +34,7 @@ def test_route():
 
         else:
             for k, v in result_dict.items():
-                result += f'{k}: {v}\n'
+                result += f'{k}: {v:.2f}\n'
 
     return template()
 

@@ -56,7 +56,7 @@ def save_model(model: Model, path: str):
 def clean_text(text):
     text = text.lower()
 
-    for symbol in ['/', '-', '=', '+', 'fw:', 're:', '.']:
+    for symbol in ['\\', '-', '=', '+', 'fw:', 're:', '.']:
         text = text.replace(symbol, '')
 
     text = text.replace('  ', ' ')
