@@ -2,19 +2,14 @@ from flask import render_template, request
 
 from app import create_app, auth
 from app.core import predict
+from app.models import Settings
 
 app = create_app()
 
 
-@app.get('/')
+@app.route('/', methods=['GET', 'POST'])
 @auth.login_required
 def root_route():
-    return render_template('index.html')
-
-
-@app.route('/test/', methods=['GET', 'POST'])
-@auth.login_required
-def test_route():
     result = ""
     message = ""
 
@@ -33,8 +28,14 @@ def test_route():
             result = 'Невалидное сообщение!'
 
         else:
+            thresholds = Settings.query.where(
+                Settings.name.in_([f'{x}_threshold' for x in result_dict.keys()])
+            ).all()
+            thresholds = {x.name: x.value for x in thresholds}
+
             for k, v in result_dict.items():
-                result += f'{k}: {v:.2f}\n'
+                is_triggered = v >= float(thresholds[f'{k}_threshold'])
+                result += f'{k}: {v:.2f}. Trigger: {is_triggered}\n'
 
     return template()
 
