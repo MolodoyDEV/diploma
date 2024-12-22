@@ -54,16 +54,16 @@ def translate_data_to_ru(
 
 
 if __name__ == '__main__':
-    # translate_data_to_ru(
-    #    'data/original/fraud.csv',
-    #    'data/ru/fraud.csv',
-    #    body_column_name='Body',
-    #    label_column_name='Label'
-    # )
-    # translate_data_to_ru(
-    #    'data/original/fishing.csv',
-    #    'data/ru/fishing.csv'
-    # )
+    translate_data_to_ru(
+       'data/original/fraud.csv',
+       'data/ru/fraud.csv',
+       body_column_name='Body',
+       label_column_name='Label'
+    )
+    translate_data_to_ru(
+       'data/original/phishing.csv',
+       'data/ru/phishing.csv'
+    )
     translate_data_to_ru(
         'data/original/spam.csv',
         'data/ru/spam.csv',

@@ -28,7 +28,7 @@ auth = HTTPBasicAuth()
 translator_to_en = GoogleTranslator(source='auto', target='en')
 
 model_by_name: Dict[str, Dict[str, Any]] = {
-    'fishing': {},
+    'phishing': {},
     'fraud': {},
     'spam': {},
 }
@@ -65,7 +65,7 @@ def fill_default_database(flask_app: Flask):
             db.session.commit()
 
         DEFAULT_SETTINGS = {
-            'fishing_threshold': '0.985',
+            'phishing_threshold': '0.985',
             'fraud_threshold': '0.90',
             'spam_threshold': '0.98',
         }
