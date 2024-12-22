@@ -1,5 +1,6 @@
 import logging
 import os
+import uuid
 from typing import List, Dict, Any
 
 from deep_translator import GoogleTranslator
@@ -117,6 +118,7 @@ def get_user_roles(authorization) -> List[str]:
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SECRET_KEY'] = uuid.uuid4().hex
     db.init_app(app)
 
     fill_default_database(app)
